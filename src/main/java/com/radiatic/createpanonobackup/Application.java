@@ -250,7 +250,7 @@ public class Application {
 			File panoFolder = new File(String.format("%s/%s", backupFolder.getPath(), pano.getId()));
 			panoFolder.mkdirs();
 
-			System.out.printf("Downloading panorama %d / %d...\r\n", panoCounter.incrementAndGet(), panoramas.size());
+			System.out.printf("Downloading panorama [%s] (%d / %d)...\r\n", pano.getTitle(), panoCounter.incrementAndGet(), panoramas.size());
 
 			File panoramaInfoFile = new File(String.format("%s/%s.txt", panoFolder.getPath(), pano.getId()));
 			try {
@@ -338,7 +338,7 @@ public class Application {
 				Paths.get(panoramasInfoFile.getPath()),
 				String.join(
 					"\r\n",
-					panoramas.stream().map(pano -> String.format("%s=%s", pano.getId(), pano.getTitle())).collect(toList())
+					panoramas.stream().map(pano -> String.format("%s=%s", pano.getId(), pano.getTitle() != null ? pano.getTitle() : "")).collect(toList())
 				).getBytes(),
 				StandardOpenOption.CREATE_NEW
 			);
