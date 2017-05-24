@@ -70,7 +70,6 @@ public class Application {
 			}
 		}
 
-
 		byte[] bytes = EntityUtils.toByteArray(response.getEntity());
 		Files.write(
 			Paths.get(destFile.getPath()),
@@ -135,8 +134,8 @@ public class Application {
 	public void run() {
 		if (username == null || password == null) {
 			System.out.println("Either the Panono account username or the password was not specified");
-			System.out.println("Usage: java create-panono-backup-1.0.jar --username \"USERNAME\" --password \"PASSWORD\" --downloadUpf UPF_FLAG");
-			System.out.println("Where UPF_FLAG should be specified as \"yes\" to also download the UPF files");
+			System.out.println("Usage: java -jar create-panono-backup-1.1.jar --username \"USERNAME\" --password \"PASSWORD\" --downloadUpf UPF_FLAG");
+			System.out.println("where UPF_FLAG should be specified as \"yes\" to also download the UPF files");
 			return;
 		}
 
@@ -153,7 +152,7 @@ public class Application {
 					"remember_me", false
 				)
 			);
-		} catch (Exception ex) {}
+		} catch (Exception ignored) {}
 
 		try {
 			loginRequest.setEntity(new StringEntity(loginJson));
@@ -179,22 +178,14 @@ public class Application {
 			return;
 		}
 
-		DateTime now = DateUtil.now();
-
 		Path currentRelativePath = Paths.get("");
 		String s = currentRelativePath.toAbsolutePath().toString();
 		File cwd = new File(s);
 
-		File backupFolderMutable = new File(String.format("%s/panono-backups/%s", cwd.getPath(), username));
+		File backupFolder = new File(String.format("%s/panono-backups/%s", cwd.getPath(), username));
 
-		if (backupFolderMutable.exists()) {
-			backupFolderMutable = new File(String.format("%s/panono-backups/%s-%s", cwd.getPath(), username, now.toString("YYYY-MM-DD-HH-mm-ss")));
-		}
-
-		backupFolderMutable.mkdirs();
-
-		// a hack to make it accessible in a lambda
-		File backupFolder = backupFolderMutable;
+		if (!backupFolder.exists())
+			backupFolder.mkdirs();
 
 		List<Panorama> panoramas = new ArrayList<>();
 
@@ -202,8 +193,8 @@ public class Application {
 		String pageSize = "12";
 		while (true) {
 			System.out.printf("Fetching panoramas with offset [%s]\r\n", offset != null ? offset : "-");
-			String panoramasJson = "";
 
+			String panoramasJson;
 			try {
 				panoramasJson = fetchPanoramas(pageSize, offset);
 			} catch (Exception ex) {
@@ -226,7 +217,7 @@ public class Application {
 						Map data = (Map) item.getOrDefault("data", null);
 						String title = (String) data.getOrDefault("title", null);
 						String description = (String) data.getOrDefault("description", null);
-						DateTime createdAt = new DateTime((String) data.getOrDefault("created_at", null)).withZone(DateUtil.tzUtc);
+						DateTime createdAt = new DateTime(data.getOrDefault("created_at", null)).withZone(DateUtil.tzUtc);
 						panoramas.add(new Panorama(id, title, createdAt, description));
 					}
 				});
@@ -242,35 +233,26 @@ public class Application {
 			}
 		}
 
-		System.out.println("Loaded panorama list");
-
 		AtomicInteger panoCounter = new AtomicInteger(0);
 
-		for (Panorama pano : panoramas) {
+		List<Panorama> newPanoramas = panoramas
+			.stream()
+			.filter(pano -> {
+				File panoFolder = new File(String.format("%s/%s", backupFolder.getPath(), pano.getId()));
+				File panoramaInfoFile = new File(String.format("%s/%s.txt", panoFolder.getPath(), pano.getId()));
+
+				return !panoramaInfoFile.exists();
+			})
+			.collect(toList());
+
+		System.out.printf("Found %d non-synced panoramas out of %d total\r\n", newPanoramas.size(), panoramas.size());
+
+		for (Panorama pano : newPanoramas) {
 			File panoFolder = new File(String.format("%s/%s", backupFolder.getPath(), pano.getId()));
-			panoFolder.mkdirs();
+			if (!panoFolder.exists())
+				panoFolder.mkdirs();
 
-			System.out.printf("Downloading panorama [%s] (%d / %d)...\r\n", pano.getTitle(), panoCounter.incrementAndGet(), panoramas.size());
-
-			File panoramaInfoFile = new File(String.format("%s/%s.txt", panoFolder.getPath(), pano.getId()));
-			try {
-				Files.write(
-					Paths.get(panoramaInfoFile.getPath()),
-					String.join(
-						"\r\n",
-						ImmutableList.of(
-							String.format("id=%s", pano.getId()),
-							String.format("title=%s", pano.getTitle()),
-							String.format("description=%s", pano.getDescription() != null ? pano.getDescription() : ""),
-							String.format("createdAt=%s", pano.getCreatedAt().toString())
-						)
-					).getBytes(),
-					StandardOpenOption.CREATE_NEW
-				);
-			} catch (Exception ex) {
-				System.out.println("Failed to create panorama info file");
-				return;
-			}
+			System.out.printf("Downloading panorama [%s] (%s) (%d / %d)...\r\n", pano.getTitle(), pano.getId(), panoCounter.incrementAndGet(), newPanoramas.size());
 
 			String panoramaJson;
 			try {
@@ -280,7 +262,7 @@ public class Application {
 				return;
 			}
 
-			Map panoramaMap = null;
+			Map panoramaMap;
 			try {
 				panoramaMap = mapper.readValue(panoramaJson, Map.class);
 			} catch (Exception ex) {
@@ -329,6 +311,27 @@ public class Application {
 					return;
 				}
 			}
+
+			File panoramaInfoFile = new File(String.format("%s/%s.txt", panoFolder.getPath(), pano.getId()));
+
+			try {
+				Files.write(
+					Paths.get(panoramaInfoFile.getPath()),
+					String.join(
+						"\r\n",
+						ImmutableList.of(
+							String.format("id=%s", pano.getId()),
+							String.format("title=%s", pano.getTitle()),
+							String.format("description=%s", pano.getDescription() != null ? pano.getDescription() : ""),
+							String.format("createdAt=%s", pano.getCreatedAt().toString())
+						)
+					).getBytes(),
+					StandardOpenOption.CREATE_NEW
+				);
+			} catch (Exception ex) {
+				System.out.println("Failed to create panorama info file");
+				return;
+			}
 		}
 
 		File panoramasInfoFile = new File(String.format("%s/panoramas.txt", backupFolder.getPath()));
@@ -350,7 +353,7 @@ public class Application {
 
 		try {
 			response.close();
-		} catch (Exception ex) {}
+		} catch (Exception ignored) {}
 
 	}
 }

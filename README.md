@@ -3,7 +3,7 @@
 You will need to install Java 8+ in order to use this app to download your Panono panoramas onto your computer.
 
 The included backups will contain the equirecetangular image set that Panono creates as well as the UPF package that 
-stores the individual JPGs that comprise each panorama.
+stores the individual JPGs that comprise each panorama (assuming you elect to download these).
 
 ### Java installation
 
@@ -13,10 +13,10 @@ Once you have installed Java you have to add it to your PATH system variable. [T
 
 ### Download
 
-[create-panono-backup-1.0.jar](http://radiatic.com/create-panono-backup-1.0.jar)
+[create-panono-backup-1.1.jar](http://radiatic.com/create-panono-backup-1.1.jar)
 
 (Please, exercise caution and scan this Java executable file for malware before running it. The SHA-1 hash of the downloaded 
-file should be f87d589bef8122f90258e0fcc81284ddc7475d05)
+file should be 6e85a77ea4a43f8bd4edef792b5f8465cee21e5f)
 
 ### Usage in Windows
 
@@ -73,15 +73,25 @@ on how to do that is available
 
 The current version of the backup tool will not save your album data. It will only download the individual panoramas.
 
-Each run of the app will download your entire panorama set, which could easily stretch into the multi-gigabyte range 
-(more so, if you elect to download the UPF files). Keep in mind the required bandwidth and disk space.
+Each run of the app will download only panoramas that it has not downloaded before (assuming the destination folder is the same).
+If you change the `includeUpf` flag between runs it will not sync the change for already downloaded panoramas. Be aware that
+each panorama can be anywhere from ~35M to ~140MB, depending upon if you're downloading the UPF packages.
+
+This tool uses reverse-engineered web API calls to Panono's servers. If Panono change their API, the tool may stop working, 
+requiring an update to make it compatible again.
 
 ### Would-be-nice-to-have list
 
 - Avoid having to deal with the Java setup process
-- Incremental backups
 - Enable downloading of cubemap images
 - Enable downloading of album data
+- Where possible, use the panorama title as the file/folder name
+
+### Changelog
+
+#### 1.1
+
+- Enabled incremental backups
 
 ### Disclaimer
 
