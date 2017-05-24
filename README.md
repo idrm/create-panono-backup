@@ -46,7 +46,7 @@ Now type `java -jar create-panono-backup-1.0.jar --username "USERNAME" --passwor
 you want to download the UPF packages. Keep the double quotes as part of the command arguments so that any blank space that may
 be part of your password (or username) are handled correctly.
 
-The app will create a `panono-backups` sub-folder inside `C:\PanonoBackups`, as well as a sub-folder that has the same name
+The app will create a `panono-backups` sub-folder inside `/Users/jack/PanonoBackups`, as well as a sub-folder that has the same name
 as your username. It will load up your panoramas' metadata (title, description, etc), and one by one create a sub-folder 
 for each panorama and save the metadata as well as all image data there.
 
