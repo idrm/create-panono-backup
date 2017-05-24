@@ -71,6 +71,8 @@ public class Application {
 		}
 
 		byte[] bytes = EntityUtils.toByteArray(response.getEntity());
+		if (destFile.exists())
+			destFile.delete();
 		Files.write(
 			Paths.get(destFile.getPath()),
 			bytes,
@@ -307,7 +309,7 @@ public class Application {
 					System.out.printf("Downloading %s...\r\n", imageUrl);
 					downloadImage(imageUrl, file);
 				} catch (Exception ex) {
-					System.out.printf("!!! Failed to download %s\r\n", imageUrl);
+					System.out.printf("!!! Failed to download %s - %s\r\n", imageUrl, ex.getMessage());
 					return;
 				}
 			}
