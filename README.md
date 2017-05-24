@@ -42,7 +42,7 @@ is `/Users/jack/PanonoBackups`.
 Open a terminal window, and type `cd /Users/jack/PanonoBackups`.
 
 Now type `java -jar create-panono-backup-1.0.jar --username "USERNAME" --password "PASSWORD" --includeUpf UPFFLAG`, replacing 
-`USERNAME` with your username, `PASSWORD` with your password, and `UPFFLAG` with either `yes` or `no', depending upon whether 
+`USERNAME` with your username, `PASSWORD` with your password, and `UPFFLAG` with either `yes` or `no`, depending upon whether 
 you want to download the UPF packages. Keep the double quotes as part of the command arguments so that any blank space that may
 be part of your password (or username) are handled correctly.
 
@@ -54,6 +54,13 @@ Each panorama folder (and the files in it) will be named with the ID of the pano
 to ensure only legal characters are used. Since panorama title may include non-filename-legal character (e.g. an asterisk), 
 those cannot be used to name the files. Instead, the title, the description, and the creation date are stored in a txt file 
 inside of the panorama folder.
+
+### Notes
+
+A UPF package is the set of images that the Panono camera ball takes for each panorama. You can extract the images located 
+in a UPF, and use 3rd party stitching software (e.g. PTGui, PanoramaStudio, etc.) to create your own panoramas. A tutorial
+on how to do that is available 
+(here)[http://360rumors.com/2017/05/exclusive-stitch-panono-images-offline-fix-panono-stitching-errors.html].
 
 ### Disclaimer
 
