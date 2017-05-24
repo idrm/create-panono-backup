@@ -60,7 +60,7 @@ inside of the panorama folder.
 A UPF package is the set of images that the Panono camera ball takes for each panorama. You can extract the images located 
 in a UPF, and use 3rd party stitching software (e.g. PTGui, PanoramaStudio, etc.) to create your own panoramas. A tutorial
 on how to do that is available 
-[here]([http://360rumors.com/2017/05/exclusive-stitch-panono-images-offline-fix-panono-stitching-errors.html]).
+[here](http://360rumors.com/2017/05/exclusive-stitch-panono-images-offline-fix-panono-stitching-errors.html).
 
 ### Disclaimer
 
