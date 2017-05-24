@@ -7,7 +7,7 @@ stores the individual JPGs that comprise each panorama.
 
 ### Java installation
 
-If you do not have Java 8 SDK already installed, you can download it [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+If you do not have Java 8 SDK already installed, you can download it [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
 
 Once you have installed Java you have to add it to your PATH system variable. [This tutorial](https://www.java.com/en/download/help/path.xml) explains how to do that.
 
@@ -75,6 +75,13 @@ The current version of the backup tool will not save your album data. It will on
 
 Each run of the app will download your entire panorama set, which could easily stretch into the multi-gigabyte range 
 (more so, if you elect to download the UPF files). Keep in mind the required bandwidth and disk space.
+
+### Would-be-nice-to-have list
+
+- Avoid having to deal with the Java setup process
+- Incremental backups
+- Enable downloading of cubemap images
+- Enable downloading of album data
 
 ### Disclaimer
 
