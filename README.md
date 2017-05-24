@@ -9,6 +9,9 @@ stores the individual JPGs that comprise each panorama.
 
 [create-panono-backup-1.0.jar](http://radiatic.com/create-panono-backup-1.0.jar)
 
+(Please, exercise caution and scan this Java executable file for malware before running it. The SHA-1 hash of the downloaded 
+file should be f87d589bef8122f90258e0fcc81284ddc7475d05)
+
 ### Usage in Windows
 
 Make sure your Java installation is in your command prompt path. To test this, enter `java` in a command prompt, 
