@@ -67,6 +67,9 @@ on how to do that is available
 
 The current version of the backup tool will not save your album data. It will only download the individual panoramas.
 
+Each run of the app will download your entire panorama set, which could easily stretch into the multi-gigabyte range 
+(more so, if you elect to download the UPF files). Keep in mind the required bandwidth and disk space.
+
 ### Disclaimer
 
 THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
