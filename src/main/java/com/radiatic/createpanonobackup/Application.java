@@ -240,7 +240,6 @@ public class Application {
 				System.out.println("Failed to fetch panoramas due to unrecognized server response");
 				break;
 			}
-
 		}
 
 		System.out.println("Loaded panorama list");
@@ -253,7 +252,7 @@ public class Application {
 
 			System.out.printf("Downloading panorama %d / %d...\r\n", panoCounter.incrementAndGet(), panoramas.size());
 
-			File panoramaInfoFile = new File(String.format("%s/info.txt", panoFolder.getPath()));
+			File panoramaInfoFile = new File(String.format("%s/%s.txt", panoFolder.getPath(), pano.getId()));
 			try {
 				Files.write(
 					Paths.get(panoramaInfoFile.getPath()),
@@ -273,7 +272,7 @@ public class Application {
 				return;
 			}
 
-			String panoramaJson = "";
+			String panoramaJson;
 			try {
 				panoramaJson = fetchPanorama(pano.getId());
 			} catch (Exception ex) {
