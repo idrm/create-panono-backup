@@ -1,11 +1,15 @@
-== Panono panorama backup tool
+## Panono panorama backup tool
 
 You will need to install Java 8+ in order to use this app to download your Panono panoramas onto your computer.
 
 The included backups will contain the equirecetangular image set that Panono creates as well as the UPF package that 
 stores the individual JPGs that comprise each panorama.
 
-=== Usage in Windows
+### Download
+
+[create-panono-backup-1.0.jar](http://radiatic.com/create-panono-backup-1.0.jar)
+
+### Usage in Windows
 
 Make sure your Java installation is in your command prompt path. To test this, enter `java` in a command prompt, 
 press the Enter key, and if you see a diagnostic message showing you the version of Java you have installed, you're golden.
@@ -28,7 +32,7 @@ to ensure only legal characters are used. Since panorama title may include non-f
 those cannot be used to name the files. Instead, the title, the description, and the creation date are stored in a txt file 
 inside of the panorama folder.
 
-=== Usage in OS X (and other Unix flavors)
+### Usage in OS X (and other Unix flavors)
 
 Ensure that you have Java 8+ installed by entering `java` in a terminal window.
 
