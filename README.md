@@ -5,6 +5,12 @@ You will need to install Java 8+ in order to use this app to download your Panon
 The included backups will contain the equirecetangular image set that Panono creates as well as the UPF package that 
 stores the individual JPGs that comprise each panorama.
 
+### Java installation
+
+If you do not have Java 8 SDK already installed, you can download it [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+
+Once you have installed Java you have to add it to your PATH system variable. [This tutorial](https://www.java.com/en/download/help/path.xml) explains how to do that.
+
 ### Download
 
 [create-panono-backup-1.0.jar](http://radiatic.com/create-panono-backup-1.0.jar)
