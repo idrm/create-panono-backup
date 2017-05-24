@@ -23,11 +23,11 @@ file should be 6e85a77ea4a43f8bd4edef792b5f8465cee21e5f)
 Make sure your Java installation is in your command prompt path. To test this, enter `java` in a command prompt, 
 press the Enter key, and if you see a diagnostic message showing you the version of Java you have installed, you're golden.
 
-Copy the `create-panono-backup-1.0.jar` file to a folder where you want to store your panoramas. Let's say that folder is `C:\PanonoBackups`.
+Copy the `create-panono-backup-1.1.jar` file to a folder where you want to store your panoramas. Let's say that folder is `C:\PanonoBackups`.
 
 Open a command prompt window, and enter `cd C:\PanonoBackups`.
 
-Now type `java -jar create-panono-backup-1.0.jar --username "USERNAME" --password "PASSWORD" --includeUpf UPFFLAG`, replacing 
+Now type `java -jar create-panono-backup-1.1.jar --username "USERNAME" --password "PASSWORD" --includeUpf UPFFLAG`, replacing 
 `USERNAME` with your username, `PASSWORD` with your password, and `UPFFLAG` with either `yes` or `no', depending upon whether 
 you want to download the UPF packages. Keep the double quotes as part of the command arguments so that any blank space that may
 be part of your password (or username) are handled correctly.
@@ -45,12 +45,12 @@ inside of the panorama folder.
 
 Ensure that you have Java 8+ installed by entering `java` in a terminal window.
 
-Copy the `create-panono-backup-1.0.jar` file to a folder where you want to store your panoramas. Let's say that folder 
+Copy the `create-panono-backup-1.1.jar` file to a folder where you want to store your panoramas. Let's say that folder 
 is `/Users/jack/PanonoBackups`.
 
 Open a terminal window, and type `cd /Users/jack/PanonoBackups`.
 
-Now type `java -jar create-panono-backup-1.0.jar --username "USERNAME" --password "PASSWORD" --includeUpf UPFFLAG`, replacing 
+Now type `java -jar create-panono-backup-1.1.jar --username "USERNAME" --password "PASSWORD" --includeUpf UPFFLAG`, replacing 
 `USERNAME` with your username, `PASSWORD` with your password, and `UPFFLAG` with either `yes` or `no`, depending upon whether 
 you want to download the UPF packages. Keep the double quotes as part of the command arguments so that any blank space that may
 be part of your password (or username) are handled correctly.
@@ -74,8 +74,9 @@ on how to do that is available
 The current version of the backup tool will not save your album data. It will only download the individual panoramas.
 
 Each run of the app will download only panoramas that it has not downloaded before (assuming the destination folder is the same).
-If you change the `includeUpf` flag between runs it will not sync the change for already downloaded panoramas. Be aware that
-each panorama can be anywhere from ~35M to ~140MB, depending upon if you're downloading the UPF packages.
+If you change the `includeUpf` flag between runs it will not sync the change for already downloaded panoramas. 
+
+Be aware that each panorama can be anywhere from ~35M to ~140MB, depending upon if you're downloading the UPF packages.
 
 This tool uses reverse-engineered web API calls to Panono's servers. If Panono change their API, the tool may stop working, 
 requiring an update to make it compatible again.
