@@ -27,7 +27,7 @@ Copy the `create-panono-backup-1.1.1.jar` file to a folder where you want to sto
 
 Open a command prompt window, and enter `cd C:\PanonoBackups`.
 
-Now type `java -jar create-panono-backup-1.1.1.jar --username "USERNAME" --password "PASSWORD" --includeUpf UPFFLAG`, replacing 
+Now type `java -Xmx768m -jar create-panono-backup-1.1.1.jar --username "USERNAME" --password "PASSWORD" --includeUpf UPFFLAG`, replacing 
 `USERNAME` with your username, `PASSWORD` with your password, and `UPFFLAG` with either `yes` or `no', depending upon whether 
 you want to download the UPF packages. Keep the double quotes as part of the command arguments so that any blank space that may
 be part of your password (or username) are handled correctly.
@@ -50,7 +50,7 @@ is `/Users/jack/PanonoBackups`.
 
 Open a terminal window, and type `cd /Users/jack/PanonoBackups`.
 
-Now type `java -jar create-panono-backup-1.1.1.jar --username "USERNAME" --password "PASSWORD" --includeUpf UPFFLAG`, replacing 
+Now type `java -Xmx768m -jar create-panono-backup-1.1.1.jar --username "USERNAME" --password "PASSWORD" --includeUpf UPFFLAG`, replacing 
 `USERNAME` with your username, `PASSWORD` with your password, and `UPFFLAG` with either `yes` or `no`, depending upon whether 
 you want to download the UPF packages. Keep the double quotes as part of the command arguments so that any blank space that may
 be part of your password (or username) are handled correctly.
