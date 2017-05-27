@@ -16,6 +16,7 @@ import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTime;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,6 +40,9 @@ public class Application {
 	@Parameter(names={"--includeUpf", "-upf"})
 	String downloadUpf;
 
+	// fake 'microsoft edge' as the user agent
+	private static final String fakeUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063";
+
 	BasicCookieStore cookieStore = new BasicCookieStore();
 	HttpClient client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
@@ -54,6 +58,7 @@ public class Application {
 	private void downloadImage(String url, File destFile) throws Exception {
 		final HttpGet fetchImage = new HttpGet(url);
 		fetchImage.setHeader("Referer", "https://cloud.panono.com/p/1111111111111111");
+		fetchImage.setHeader("User-Agent", fakeUserAgent);
 
 		CloseableHttpResponse response;
 		try {
@@ -82,25 +87,28 @@ public class Application {
 	}
 
 	private String fetchPanoramas(String pageSize, String offset) throws Exception {
-		final HttpGet fetchPanoramasRequest = new HttpGet(
-			String.format("https://api3-dev.panono.com/u/%s/panoramas?pageSize=%s", username, pageSize)
-			+ (offset != null ? "&offset=" + offset : "")
-		);
-		fetchPanoramasRequest.setHeader("Referer", String.format("https://cloud.panono.com/u/%s/all/overview", username));
+		String url = String.format("https://api3-dev.panono.com/u/%s/panoramas?pageSize=%s", URLEncoder.encode(username, "UTF-8"), pageSize)
+			+ (offset != null ? "&offset=" + offset : "");
+
+		final HttpGet fetchPanoramasRequest = new HttpGet(url);
+		fetchPanoramasRequest.setHeader("Referer", String.format("https://cloud.panono.com/u/%s/all/overview", URLEncoder.encode(username, "UTF-8")));
 		fetchPanoramasRequest.setHeader("Origin", "https://cloud.panono.com");
+		fetchPanoramasRequest.setHeader("User-Agent", fakeUserAgent);
 
 		CloseableHttpResponse response;
 		try {
 			response = (CloseableHttpResponse)client.execute(fetchPanoramasRequest);
 		} catch (Exception ex) {
-			throw new Exception("Fetch panoramas request error: " + ex.getMessage());
+			throw new Exception("Fetch panoramas request error(#1): " + ex.getMessage());
 		}
 
 		if (response.getStatusLine().getStatusCode() != 200) {
+			System.out.println(String.format("!!! Request to %s returned status code %d", url, response.getStatusLine().getStatusCode()));
+			System.out.println(String.format("Response: %s", response.toString()));
 			try {
-				throw new Exception("Fetch panoramas request error: " + EntityUtils.toString(response.getEntity()));
+				throw new Exception("Fetch panoramas request error (#2): " + EntityUtils.toString(response.getEntity()));
 			} catch (Exception ex) {
-				throw new Exception("Fetch panoramas request error");
+				throw new Exception("Fetch panoramas request error (#3): " + ex.getMessage());
 			}
 		}
 
@@ -108,15 +116,16 @@ public class Application {
 	}
 
 	private String fetchPanorama(String id) throws Exception {
-		final HttpGet fetchPanoramasRequest = new HttpGet(
+		final HttpGet fetchPanoramaRequest = new HttpGet(
 			String.format("https://api3-dev.panono.com/panorama/%s", id)
 		);
-		fetchPanoramasRequest.setHeader("Referer", String.format("ttps://cloud.panono.com/p/%s", id));
-		fetchPanoramasRequest.setHeader("Origin", "https://cloud.panono.com");
+		fetchPanoramaRequest.setHeader("Referer", String.format("ttps://cloud.panono.com/p/%s", id));
+		fetchPanoramaRequest.setHeader("Origin", "https://cloud.panono.com");
+		fetchPanoramaRequest.setHeader("User-Agent", fakeUserAgent);
 
 		CloseableHttpResponse response;
 		try {
-			response = (CloseableHttpResponse)client.execute(fetchPanoramasRequest);
+			response = (CloseableHttpResponse)client.execute(fetchPanoramaRequest);
 		} catch (Exception ex) {
 			throw new Exception("Fetch panorama request error: " + ex.getMessage());
 		}
@@ -166,6 +175,7 @@ public class Application {
 		loginRequest.setHeader("Origin", "https://cloud.panono.com");
 		loginRequest.setHeader("Accept", "application/json");
 		loginRequest.setHeader("Content-type", "application/json");
+		loginRequest.setHeader("User-Agent", fakeUserAgent);
 
 		CloseableHttpResponse response;
 		try {
@@ -323,7 +333,7 @@ public class Application {
 						"\r\n",
 						ImmutableList.of(
 							String.format("id=%s", pano.getId()),
-							String.format("title=%s", pano.getTitle()),
+							String.format("title=%s", pano.getTitle() != null ? pano.getTitle() : ""),
 							String.format("description=%s", pano.getDescription() != null ? pano.getDescription() : ""),
 							String.format("createdAt=%s", pano.getCreatedAt().toString())
 						)
