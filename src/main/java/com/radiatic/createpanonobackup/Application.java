@@ -15,7 +15,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTime;
 
-import java.io.File;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,6 +39,9 @@ public class Application {
 
 	@Parameter(names={"--includeUpf", "-upf"})
 	String downloadUpf;
+
+	@Parameter(names={"--timestampedFolders", "-tf"})
+	String timestampedFolders;
 
 	// fake 'microsoft edge' as the user agent
 	private static final String fakeUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063";
@@ -75,14 +78,23 @@ public class Application {
 			}
 		}
 
-		byte[] bytes = EntityUtils.toByteArray(response.getEntity());
 		if (destFile.exists())
 			destFile.delete();
+
+		// credit to https://stackoverflow.com/a/32068416
+		try (FileOutputStream outstream = new FileOutputStream(destFile)) {
+			response.getEntity().writeTo(outstream);
+		}
+
+		/*
+		byte[] bytes = EntityUtils.toByteArray(response.getEntity());
+
 		Files.write(
 			Paths.get(destFile.getPath()),
 			bytes,
 			StandardOpenOption.CREATE_NEW
 		);
+		*/
 
 	}
 
@@ -145,8 +157,9 @@ public class Application {
 	public void run() {
 		if (username == null || password == null) {
 			System.out.println("Either the Panono account username or the password was not specified");
-			System.out.println("Usage: java -jar create-panono-backup-1.1.jar --username \"USERNAME\" --password \"PASSWORD\" --downloadUpf UPF_FLAG");
+			System.out.println("Usage: java -jar create-panono-backup-1.1.jar --username \"USERNAME\" --password \"PASSWORD\" --downloadUpf UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG");
 			System.out.println("where UPF_FLAG should be specified as \"yes\" to also download the UPF files");
+			System.out.println("and TIMESTAMPED_FOLDERS_FLAG should be specified as \"yes\" to prepend each panorama's folder name with the date and time the panorama was created at");
 			return;
 		}
 
@@ -250,21 +263,38 @@ public class Application {
 		List<Panorama> newPanoramas = panoramas
 			.stream()
 			.filter(pano -> {
-				File panoFolder = new File(String.format("%s/%s", backupFolder.getPath(), pano.getId()));
+				File panoFolder;
+				if (timestampedFolders != null && "yes".equals(timestampedFolders.toLowerCase())) {
+					panoFolder = new File(String.format("%s/%s-%s", backupFolder.getPath(), pano.getCreatedAt().toString("yyyy-MM-dd-HHmmss"), pano.getId()));
+					// check if non-timestmaped pano folder exists, and rename it if it does
+					File nonTimestampedPanoFolder = new File(String.format("%s/%s", backupFolder.getPath(), pano.getId()));
+					if (nonTimestampedPanoFolder.exists()) {
+						nonTimestampedPanoFolder.renameTo(panoFolder);
+					}
+				} else {
+					panoFolder = new File(String.format("%s/%s", backupFolder.getPath(), pano.getId()));
+				}
 				File panoramaInfoFile = new File(String.format("%s/%s.txt", panoFolder.getPath(), pano.getId()));
-
 				return !panoramaInfoFile.exists();
 			})
+			.sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
 			.collect(toList());
 
 		System.out.printf("Found %d non-synced panoramas out of %d total\r\n", newPanoramas.size(), panoramas.size());
 
 		for (Panorama pano : newPanoramas) {
-			File panoFolder = new File(String.format("%s/%s", backupFolder.getPath(), pano.getId()));
+			//File panoFolder = new File(String.format("%s/%s", backupFolder.getPath(), pano.getId()));
+			File panoFolder;
+			if (timestampedFolders != null && "yes".equals(timestampedFolders.toLowerCase())) {
+				panoFolder = new File(String.format("%s/%s-%s", backupFolder.getPath(), pano.getCreatedAt().toString("yyyy-MM-dd-HHmmss"), pano.getId()));
+			} else {
+				panoFolder = new File(String.format("%s/%s", backupFolder.getPath(), pano.getId()));
+			}
+
 			if (!panoFolder.exists())
 				panoFolder.mkdirs();
 
-			System.out.printf("Downloading panorama [%s] (%s) (%d / %d)...\r\n", pano.getTitle(), pano.getId(), panoCounter.incrementAndGet(), newPanoramas.size());
+			System.out.printf("Downloading panorama [%s] (%s) (%d / %d)...\r\n", pano.getTitle() != null ? pano.getTitle() : "UNTITLED", pano.getId(), panoCounter.incrementAndGet(), newPanoramas.size());
 
 			String panoramaJson;
 			try {
@@ -286,14 +316,14 @@ public class Application {
 
 			ImmutableMap.Builder imageUrlsBuilder = ImmutableMap.<File, String>builder();
 
-			Map sourceUpf = (Map)data.getOrDefault("source_upf", null);
-			String upfUrl = (String)sourceUpf.getOrDefault("url", null);
-
-			if (downloadUpf != null && "yes".equals(downloadUpf.toLowerCase()))
+			if (downloadUpf != null && "yes".equals(downloadUpf.toLowerCase())) {
+				Map sourceUpf = (Map)data.getOrDefault("source_upf", null);
+				String upfUrl = (String)sourceUpf.getOrDefault("url", null);
 				imageUrlsBuilder.put(
 					new File(String.format("%s/%s.upf", panoFolder.getPath(), pano.getId())),
 					upfUrl
 				);
+			}
 
 			Map images = (Map)data.getOrDefault("images", null);
 			List equirectangulars = (List)images.getOrDefault("equirectangulars", null);

@@ -13,23 +13,24 @@ Once you have installed Java you have to add it to your PATH system variable. [T
 
 ### Download
 
-[create-panono-backup-1.1.2.jar](http://radiatic.com/create-panono-backup-1.1.2.jar)
+[create-panono-backup-1.2.jar](http://radiatic.com/create-panono-backup-1.2.jar)
 
 (Please, exercise caution and scan this Java executable file for malware before running it. The SHA-1 hash of the downloaded 
-file should be 19cd583eca4cc7752c4b5144c7d88dea832d687a)
+file should be 247e95806fc5786b69e0ae34bfb0750ad45f06b0)
 
 ### Usage in Windows
 
 Make sure your Java installation is in your command prompt path. To test this, enter `java` in a command prompt, 
 press the Enter key, and if you see a diagnostic message showing you the version of Java you have installed, you're golden.
 
-Copy the `create-panono-backup-1.1.2.jar` file to a folder where you want to store your panoramas. Let's say that folder is `C:\PanonoBackups`.
+Copy the `create-panono-backup-1.2.jar` file to a folder where you want to store your panoramas. Let's say that folder is `C:\PanonoBackups`.
 
 Open a command prompt window, and enter `cd C:\PanonoBackups`.
 
-Now type `java -Xmx768m -jar create-panono-backup-1.1.2.jar --username "USERNAME" --password "PASSWORD" --includeUpf UPFFLAG`, replacing 
-`USERNAME` with your username, `PASSWORD` with your password, and `UPFFLAG` with either `yes` or `no', depending upon whether 
-you want to download the UPF packages. Keep the double quotes as part of the command arguments so that any blank space that may
+Now type `java create-panono-backup-1.2.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
+`USERNAME` with your username, `PASSWORD` with your password, `INCLUDE_UPF_FLAG` with either `yes` or `no`, depending upon whether 
+you want to download the UPF packages, and `TIMESTAMPED_FOLDERS_FLAG` with either `yes` or `no` depending upon if you'd like to prepend each folder
+with a timestamp. Keep the double quotes as part of the command arguments so that any blank space that may
 be part of your password (or username) are handled correctly.
 
 The app will create a `panono-backups` sub-folder inside `C:\PanonoBackups`, as well as a sub-folder that has the same name
@@ -45,14 +46,15 @@ inside of the panorama folder.
 
 Ensure that you have Java 8+ installed by entering `java` in a terminal window.
 
-Copy the `create-panono-backup-1.1.2.jar` file to a folder where you want to store your panoramas. Let's say that folder 
+Copy the `create-panono-backup-1.2.jar` file to a folder where you want to store your panoramas. Let's say that folder 
 is `/Users/jack/PanonoBackups`.
 
 Open a terminal window, and type `cd /Users/jack/PanonoBackups`.
 
-Now type `java -Xmx768m -jar create-panono-backup-1.1.2.jar --username "USERNAME" --password "PASSWORD" --includeUpf UPFFLAG`, replacing 
-`USERNAME` with your username, `PASSWORD` with your password, and `UPFFLAG` with either `yes` or `no`, depending upon whether 
-you want to download the UPF packages. Keep the double quotes as part of the command arguments so that any blank space that may
+Now type `java create-panono-backup-1.2.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
+`USERNAME` with your username, `PASSWORD` with your password, `INCLUDE_UPF_FLAG` with either `yes` or `no`, depending upon whether 
+you want to download the UPF packages, and `TIMESTAMPED_FOLDERS_FLAG` with either `yes` or `no` depending upon if you'd like to prepend each folder
+with a timestamp. Keep the double quotes as part of the command arguments so that any blank space that may
 be part of your password (or username) are handled correctly.
 
 The app will create a `panono-backups` sub-folder inside `/Users/jack/PanonoBackups`, as well as a sub-folder that has the same name
@@ -89,6 +91,16 @@ requiring an update to make it compatible again.
 - Where possible, use the panorama title as the file/folder name
 
 ### Changelog
+
+#### 1.2
+
+- Added an option to have each panorama's folder name be prepended with the date and the time the panorama was created at.
+If you have previously downloaded panoramas using this app and enable this flag during a new run, all those panoramas' folders will be
+renamed to include the timestamp. If you run the app with this flag turned off after having previously run it
+with it enabled you will get duplicate downloads (i.e. once you run the backup tool with this flag set to `yes`, always stick with
+that setting)
+
+- Files are now saved using streams, significantly reducing memory requirements
 
 #### 1.1.2
 
