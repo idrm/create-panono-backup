@@ -318,11 +318,15 @@ public class Application {
 
 			if (downloadUpf != null && "yes".equals(downloadUpf.toLowerCase())) {
 				Map sourceUpf = (Map)data.getOrDefault("source_upf", null);
-				String upfUrl = (String)sourceUpf.getOrDefault("url", null);
-				imageUrlsBuilder.put(
-					new File(String.format("%s/%s.upf", panoFolder.getPath(), pano.getId())),
-					upfUrl
-				);
+				if (sourceUpf != null) {
+					String upfUrl = (String) sourceUpf.getOrDefault("url", null);
+					if (upfUrl != null) {
+						imageUrlsBuilder.put(
+							new File(String.format("%s/%s.upf", panoFolder.getPath(), pano.getId())),
+							upfUrl
+						);
+					}
+				}
 			}
 
 			Map images = (Map)data.getOrDefault("images", null);

@@ -13,21 +13,21 @@ Once you have installed Java you have to add it to your PATH system variable. [T
 
 ### Download
 
-[create-panono-backup-1.2.jar](http://radiatic.com/create-panono-backup-1.2.jar)
+[create-panono-backup-1.2.1.jar](http://radiatic.com/create-panono-backup-1.2.1.jar)
 
 (Please, exercise caution and scan this Java executable file for malware before running it. The SHA-1 hash of the downloaded 
-file should be 247e95806fc5786b69e0ae34bfb0750ad45f06b0)
+file should be fcfa0e98e4189c121fead1d3c1dec6eb87b9df0a)
 
 ### Usage in Windows
 
 Make sure your Java installation is in your command prompt path. To test this, enter `java` in a command prompt, 
 press the Enter key, and if you see a diagnostic message showing you the version of Java you have installed, you're golden.
 
-Copy the `create-panono-backup-1.2.jar` file to a folder where you want to store your panoramas. Let's say that folder is `C:\PanonoBackups`.
+Copy the `create-panono-backup-1.2.1.jar` file to a folder where you want to store your panoramas. Let's say that folder is `C:\PanonoBackups`.
 
 Open a command prompt window, and enter `cd C:\PanonoBackups`.
 
-Now type `java create-panono-backup-1.2.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
+Now type `java -jar create-panono-backup-1.2.1.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
 `USERNAME` with your username, `PASSWORD` with your password, `INCLUDE_UPF_FLAG` with either `yes` or `no`, depending upon whether 
 you want to download the UPF packages, and `TIMESTAMPED_FOLDERS_FLAG` with either `yes` or `no` depending upon if you'd like to prepend each folder
 with a timestamp. Keep the double quotes as part of the command arguments so that any blank space that may
@@ -46,12 +46,12 @@ inside of the panorama folder.
 
 Ensure that you have Java 8+ installed by entering `java` in a terminal window.
 
-Copy the `create-panono-backup-1.2.jar` file to a folder where you want to store your panoramas. Let's say that folder 
+Copy the `create-panono-backup-1.2.1.jar` file to a folder where you want to store your panoramas. Let's say that folder 
 is `/Users/jack/PanonoBackups`.
 
 Open a terminal window, and type `cd /Users/jack/PanonoBackups`.
 
-Now type `java create-panono-backup-1.2.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
+Now type `java -jar create-panono-backup-1.2.1.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
 `USERNAME` with your username, `PASSWORD` with your password, `INCLUDE_UPF_FLAG` with either `yes` or `no`, depending upon whether 
 you want to download the UPF packages, and `TIMESTAMPED_FOLDERS_FLAG` with either `yes` or `no` depending upon if you'd like to prepend each folder
 with a timestamp. Keep the double quotes as part of the command arguments so that any blank space that may
@@ -93,6 +93,10 @@ requiring an update to make it compatible again.
 - Where possible, use the panorama title as the file/folder name
 
 ### Changelog
+
+#### 1.2.1
+- Fixed a bug where the running the app with the `--includeUpf` option set to `yes` and processing a
+panorama without a UPF file would cause the app to crash
 
 #### 1.2
 
