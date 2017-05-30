@@ -27,7 +27,7 @@ Copy the `create-panono-backup-1.2.jar` file to a folder where you want to store
 
 Open a command prompt window, and enter `cd C:\PanonoBackups`.
 
-Now type `java create-panono-backup-1.2.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
+Now type `java -jar create-panono-backup-1.2.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
 `USERNAME` with your username, `PASSWORD` with your password, `INCLUDE_UPF_FLAG` with either `yes` or `no`, depending upon whether 
 you want to download the UPF packages, and `TIMESTAMPED_FOLDERS_FLAG` with either `yes` or `no` depending upon if you'd like to prepend each folder
 with a timestamp. Keep the double quotes as part of the command arguments so that any blank space that may
@@ -51,7 +51,7 @@ is `/Users/jack/PanonoBackups`.
 
 Open a terminal window, and type `cd /Users/jack/PanonoBackups`.
 
-Now type `java create-panono-backup-1.2.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
+Now type `java -jar create-panono-backup-1.2.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
 `USERNAME` with your username, `PASSWORD` with your password, `INCLUDE_UPF_FLAG` with either `yes` or `no`, depending upon whether 
 you want to download the UPF packages, and `TIMESTAMPED_FOLDERS_FLAG` with either `yes` or `no` depending upon if you'd like to prepend each folder
 with a timestamp. Keep the double quotes as part of the command arguments so that any blank space that may
