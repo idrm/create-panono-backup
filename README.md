@@ -13,25 +13,27 @@ Once you have installed Java you have to add it to your PATH system variable. [T
 
 ### Download
 
-[create-panono-backup-1.2.1.jar](http://radiatic.com/create-panono-backup-1.2.1.jar)
+[create-panono-backup-1.3.jar](http://radiatic.com/create-panono-backup-1.3.jar)
 
 (Please, exercise caution and scan this Java executable file for malware before running it. The SHA-1 hash of the downloaded 
-file should be fcfa0e98e4189c121fead1d3c1dec6eb87b9df0a)
+file should be 59c7c618e6e659cd8697e6c72b5e615462355758)
 
 ### Usage in Windows
 
-Make sure your Java installation is in your command prompt path. To test this, enter `java` in a command prompt, 
+Make sure your Java installation is in your command prompt path. To test this, enter `java -version` in a command prompt, 
 press the Enter key, and if you see a diagnostic message showing you the version of Java you have installed, you're golden.
 
-Copy the `create-panono-backup-1.2.1.jar` file to a folder where you want to store your panoramas. Let's say that folder is `C:\PanonoBackups`.
+Copy the `create-panono-backup-1.3.jar` file to a folder where you want to store your panoramas. Let's say that folder is `C:\PanonoBackups`.
 
 Open a command prompt window, and enter `cd C:\PanonoBackups`.
 
-Now type `java -jar create-panono-backup-1.2.1.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
+Now type `java -jar create-panono-backup-1.3.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
 `USERNAME` with your username, `PASSWORD` with your password, `INCLUDE_UPF_FLAG` with either `yes` or `no`, depending upon whether 
 you want to download the UPF packages, and `TIMESTAMPED_FOLDERS_FLAG` with either `yes` or `no` depending upon if you'd like to prepend each folder
 with a timestamp. Keep the double quotes as part of the command arguments so that any blank space that may
 be part of your password (or username) are handled correctly.
+
+The `--password` command line option may be omitted, in which case the app will prompt you to enter it when it starts up.
 
 The app will create a `panono-backups` sub-folder inside `C:\PanonoBackups`, as well as a sub-folder that has the same name
 as your username. It will load up your panoramas' metadata (title, description, etc), and one by one create a sub-folder 
@@ -44,18 +46,20 @@ inside of the panorama folder.
 
 ### Usage in OS X (and other Unix flavors)
 
-Ensure that you have Java 8+ installed by entering `java` in a terminal window.
+Ensure that you have Java 8+ installed by entering `java -version` in a terminal window.
 
-Copy the `create-panono-backup-1.2.1.jar` file to a folder where you want to store your panoramas. Let's say that folder 
+Copy the `create-panono-backup-1.3.jar` file to a folder where you want to store your panoramas. Let's say that folder 
 is `/Users/jack/PanonoBackups`.
 
 Open a terminal window, and type `cd /Users/jack/PanonoBackups`.
 
-Now type `java -jar create-panono-backup-1.2.1.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
+Now type `java -jar create-panono-backup-1.3.jar --username "USERNAME" --password "PASSWORD" --includeUpf INCLUDE_UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG`, replacing 
 `USERNAME` with your username, `PASSWORD` with your password, `INCLUDE_UPF_FLAG` with either `yes` or `no`, depending upon whether 
 you want to download the UPF packages, and `TIMESTAMPED_FOLDERS_FLAG` with either `yes` or `no` depending upon if you'd like to prepend each folder
 with a timestamp. Keep the double quotes as part of the command arguments so that any blank space that may
 be part of your password (or username) are handled correctly.
+
+The `--password` command line option may be omitted, in which case the app will prompt you to enter it when it starts up.
 
 The app will create a `panono-backups` sub-folder inside `/Users/jack/PanonoBackups`, as well as a sub-folder that has the same name
 as your username. It will load up your panoramas' metadata (title, description, etc), and one by one create a sub-folder 
@@ -78,7 +82,7 @@ on how to do that is available
 The current version of the backup tool will not save your album data. It will only download the individual panoramas.
 
 Each run of the app will download only panoramas that it has not downloaded before (assuming the destination folder is the same).
-If you change the `includeUpf` flag between runs it will not sync the change for already downloaded panoramas. 
+If you change the `--includeUpf` flag between runs it will not sync the change for already downloaded panoramas. 
 
 Be aware that each panorama can be anywhere from ~35M to ~140MB, depending upon if you're downloading the UPF packages.
 
@@ -94,7 +98,15 @@ requiring an update to make it compatible again.
 
 ### Changelog
 
+#### 1.3
+
+- Made specifying the Panono account password as part of the command line optional. When it's ommitted
+from the command line, the app will prompt the user to enter the password when the app starts up.
+- Fixed a bug where the login username provided may be different than the actual Panono username (e.g.
+when trying to log in with an e-mail address), thus failing to fetch any further data
+
 #### 1.2.1
+
 - Fixed a bug where the running the app with the `--includeUpf` option set to `yes` and processing a
 panorama without a UPF file would cause the app to crash
 

@@ -86,16 +86,6 @@ public class Application {
 			response.getEntity().writeTo(outstream);
 		}
 
-		/*
-		byte[] bytes = EntityUtils.toByteArray(response.getEntity());
-
-		Files.write(
-			Paths.get(destFile.getPath()),
-			bytes,
-			StandardOpenOption.CREATE_NEW
-		);
-		*/
-
 	}
 
 	private String fetchPanoramas(String pageSize, String offset) throws Exception {
@@ -121,6 +111,34 @@ public class Application {
 				throw new Exception("Fetch panoramas request error (#2): " + EntityUtils.toString(response.getEntity()));
 			} catch (Exception ex) {
 				throw new Exception("Fetch panoramas request error (#3): " + ex.getMessage());
+			}
+		}
+
+		return EntityUtils.toString(response.getEntity());
+	}
+
+	private String fetchAccountInfo() throws Exception {
+		String url = String.format("https://api3-dev.panono.com/me");
+
+		final HttpGet fetchPanoramasRequest = new HttpGet(url);
+		fetchPanoramasRequest.setHeader("Referer", "https://cloud.panono.com/account/log-in");
+		fetchPanoramasRequest.setHeader("Origin", "https://cloud.panono.com");
+		fetchPanoramasRequest.setHeader("User-Agent", fakeUserAgent);
+
+		CloseableHttpResponse response;
+		try {
+			response = (CloseableHttpResponse)client.execute(fetchPanoramasRequest);
+		} catch (Exception ex) {
+			throw new Exception("Fetch account info request error(#1): " + ex.getMessage());
+		}
+
+		if (response.getStatusLine().getStatusCode() != 200) {
+			System.out.println(String.format("!!! Request to %s returned status code %d", url, response.getStatusLine().getStatusCode()));
+			System.out.println(String.format("Response: %s", response.toString()));
+			try {
+				throw new Exception("Fetch account info request error (#2): " + EntityUtils.toString(response.getEntity()));
+			} catch (Exception ex) {
+				throw new Exception("Fetch account info request error (#3): " + ex.getMessage());
 			}
 		}
 
@@ -155,12 +173,18 @@ public class Application {
 
 	@SuppressWarnings("unchecked")
 	public void run() {
-		if (username == null || password == null) {
-			System.out.println("Either the Panono account username or the password was not specified");
+		if (username == null) {
+			System.out.println("You did not specify your Panono username!");
 			System.out.println("Usage: java -jar create-panono-backup-1.1.jar --username \"USERNAME\" --password \"PASSWORD\" --downloadUpf UPF_FLAG --timestampedFolders TIMESTAMPED_FOLDERS_FLAG");
-			System.out.println("where UPF_FLAG should be specified as \"yes\" to also download the UPF files");
-			System.out.println("and TIMESTAMPED_FOLDERS_FLAG should be specified as \"yes\" to prepend each panorama's folder name with the date and time the panorama was created at");
+			System.out.println("The password option can be left out, in which case you will be prompted for it when the app runs.");
+			System.out.println("UPF_FLAG should be specified as \"yes\" to also download the UPF files");
+			System.out.println("TIMESTAMPED_FOLDERS_FLAG should be specified as \"yes\" to prepend each panorama's folder name with the date and time the panorama was created at");
 			return;
+		}
+
+		if (password == null) {
+			Console console = System.console();
+			password = new String(console.readPassword("Please enter your Panono account password: "));
 		}
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -200,6 +224,19 @@ public class Application {
 
 		if (response.getStatusLine().getStatusCode() != 200) {
 			System.out.println("Failed to log into Panono. Did you enter the correct username and password?");
+			return;
+		}
+
+		String accountInfoJson;
+		try {
+			accountInfoJson = fetchAccountInfo();
+			Map accountInfoMap = mapper.readValue(accountInfoJson, Map.class);
+			Map accountInfoDataMap = (Map)accountInfoMap.getOrDefault("data", null);
+			// read the actual username for the account, since the login username
+			// may be different than the Panono account username
+			username = (String)accountInfoDataMap.get("username");
+		} catch (Exception ex) {
+			System.out.println("Failed to fetch account info: " + ex.getMessage());
 			return;
 		}
 
