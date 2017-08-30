@@ -425,8 +425,7 @@ public class Application {
 				String.join(
 					"\r\n",
 					panoramas.stream().map(pano -> String.format("%s=%s", pano.getId(), pano.getTitle() != null ? pano.getTitle() : "")).collect(toList())
-				).getBytes(),
-				StandardOpenOption.CREATE_NEW
+				).getBytes()
 			);
 		} catch (Exception ex) {
 			System.out.println("Could not write the panoramas.txt file");
