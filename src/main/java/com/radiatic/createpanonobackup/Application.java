@@ -149,7 +149,7 @@ public class Application {
 		final HttpGet fetchPanoramaRequest = new HttpGet(
 			String.format("https://api3-dev.panono.com/panorama/%s", id)
 		);
-		fetchPanoramaRequest.setHeader("Referer", String.format("ttps://cloud.panono.com/p/%s", id));
+		fetchPanoramaRequest.setHeader("Referer", String.format("https://cloud.panono.com/p/%s", id));
 		fetchPanoramaRequest.setHeader("Origin", "https://cloud.panono.com");
 		fetchPanoramaRequest.setHeader("User-Agent", fakeUserAgent);
 
